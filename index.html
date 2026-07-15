@@ -2,43 +2,12 @@
 <html>
 <head>
 <meta charset='utf-8' />
-<link rel='stylesheet' href='https://realdrberg-my.sharepoint.com/personal/eder_santana_drberg_com/Documents/Calendar/skeleton.css' />
-<link rel='stylesheet' href='https://realdrberg-my.sharepoint.com/personal/eder_santana_drberg_com/Documents/Calendar/theme.css' />
-<link rel='stylesheet' href='https://realdrberg-my.sharepoint.com/personal/eder_santana_drberg_com/Documents/Calendar/palette.css' />
-<script src='https://realdrberg-my.sharepoint.com/personal/eder_santana_drberg_com/Documents/Calendar/fullcalendar.global.js'></script>
-<script src='https://realdrberg-my.sharepoint.com/personal/eder_santana_drberg_com/Documents/Calendar/global.js'></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      initialDate: '2023-01-12',
-      navLinks: true,
-      selectable: true,
-      selectMirror: true,
-      select: function(info) {
-        var title = prompt('Event Title:');
-        if (title) {
-          calendar.addEvent({
-            title: title,
-            start: info.start,
-            end: info.end,
-            allDay: info.allDay
-          })
-        }
-        calendar.unselect()
-      },
-      eventClick: function(info) {
-        openEventModal(info.event);
-      },
-      editable: true,
-      dayMaxEvents: true,
-      events: [
-        {
+<link rel="stylesheet" href="https://raw.githubusercontent.com/drberg-calendar/events/main/skeleton.css" /> <link rel="stylesheet" href="https://raw.githubusercontent.com/drberg-calendar/events/main/theme.css" /> <link rel="stylesheet" href="https://raw.githubusercontent.com/drberg-calendar/events/main/palette.css" />
+
+<script src="https://raw.githubusercontent.com/drberg-calendar/events/main/fullcalendar.global.js"></script>
+<script src="https://raw.githubusercontent.com/drberg-calendar/events/main/global.js"></script>
+
+<script> document.addEventListener('DOMContentLoaded', function() { const calendarEl = document.getElementById('calendar'); const calendar = new FullCalendar.Calendar(calendarEl, { headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' }, // Exibe automaticamente a data atual ao carregar o calendário initialDate: new Date(), // Define a visualização inicial initialView: 'dayGridMonth', navLinks: true, selectable: true, selectMirror: true, select: function(info) { const title = prompt('Event Title:'); if (title) { calendar.addEvent({ title: title, start: info.start, end: info.end, allDay: info.allDay }); } calendar.unselect(); }, eventClick: function(info) { info.jsEvent.preventDefault(); openEventModal(info.event); }, editable: true, dayMaxEvents: true, events: [         {
           title: 'Test Event AAA',
           start: '2026-07-23',
           end: '2026-07-23',
@@ -68,70 +37,8 @@
           start: '2026-08-12',
           end: '2026-08-13',
           description: 'DFGBC Testing AAA NNN DFGBC Testing AAA NNN DFGBC Testing AAA NNN'
-        }
-      ]
-    });
-    calendar.render();
-  });
+        } ] }); calendar.render(); }); function openEventModal(event) { const modal = document.getElementById('eventModal'); const modalContent = document.getElementById('modalContent'); const dateOptions = { dateStyle: 'medium', timeStyle: 'short' }; const startDate = event.start ? new Date(event.start).toLocaleString('en-US', dateOptions) : 'Not defined'; const endDate = event.end ? new Date(event.end).toLocaleString('en-US', dateOptions) : 'Not defined'; const description = event.extendedProps.description || 'No description'; let content = ` <h2>${escapeHtml(event.title)}</h2> <div class="event-details"> <p> <strong>Start Date:</strong> ${startDate} </p> <p> <strong>End Date:</strong> ${endDate} </p> <p> <strong>Description:</strong> ${escapeHtml(description)} </p> `; if (event.url) { content += ` <p> <a href="${event.url}" target="_blank" rel="noopener noreferrer" class="event-link" > Open link </a> </p> `; } content += ` <div class="modal-actions"> <button type="button" class="btn-close" onclick="closeEventModal()" > Close </button> </div> </div> `; modalContent.innerHTML = content; modal.style.display = 'flex'; document.body.classList.add('modal-open'); } function closeEventModal() { const modal = document.getElementById('eventModal'); modal.style.display = 'none'; document.body.classList.remove('modal-open'); } function escapeHtml(value) { const div = document.createElement('div'); div.textContent = value || ''; return div.innerHTML; } window.addEventListener('click', function(event) { const modal = document.getElementById('eventModal'); if (event.target === modal) { closeEventModal(); } }); document.addEventListener('keydown', function(event) { if (event.key === 'Escape') { closeEventModal(); } }); </script>
 
-  function openEventModal(event) {
-    const modal = document.getElementById('eventModal');
-    const modalContent = document.getElementById('modalContent');
-    
-    // Formatar datas
-    const startDate = event.start ? new Date(event.start).toLocaleString('pt-BR') : 'Não definido';
-    const endDate = event.end ? new Date(event.end).toLocaleString('pt-BR') : 'Não definido';
-    
-    // Montar conteúdo do modal
-    let content = `
-      <h2>${event.title}</h2>
-      <div class="event-details">
-        <p><strong>Start Date:</strong> ${startDate}</p>
-        <p><strong>End Date:</strong> ${endDate}</p>
-        <p><strong>Description:</strong> ${event.extendedProps.description || 'No description'}</p>
-    `;
-    
-    if (event.url) {
-      content += `<p><a href="${event.url}" target="_blank" class="event-link">Open link</a></p>`;
-    }
-    
-    content += `
-      <div class="modal-actions">
-        <!--<button class="btn-delete" onclick="deleteEvent('${event.id}')">Delete Event</button>-->
-        <button class="btn-close" onclick="closeEventModal()">Close</button>
-      </div>
-      </div>
-    `;
-    
-    modalContent.innerHTML = content;
-    modal.style.display = 'flex';
-  }
-
-  function closeEventModal() {
-    const modal = document.getElementById('eventModal');
-    modal.style.display = 'none';
-  }
-
-  function deleteEvent(eventId) {
-    if (confirm('Tem certeza que deseja deletar este evento?')) {
-      const calendarEl = document.getElementById('calendar');
-      const calendar = FullCalendar.getCalendarById(calendarEl);
-      const event = calendar.getEventById(eventId);
-      if (event) {
-        event.remove();
-        closeEventModal();
-      }
-    }
-  }
-
-  // Fechar modal ao clicar fora dele
-  window.onclick = function(event) {
-    const modal = document.getElementById('eventModal');
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  }
-</script>
 <style>
   body {
     margin: 40px 10px;
